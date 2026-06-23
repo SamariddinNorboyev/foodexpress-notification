@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # FoodExpress — Notification Service
 
 > **Texnologiya:** Python / FastAPI · PostgreSQL (`notification_db`) · RabbitMQ · Port `8002`
@@ -46,3 +47,6 @@ Order servis chiqargan **RabbitMQ eventlarini tinglaydi** va foydalanuvchiga xab
 
 ## 7. O'rganish maqsadi
 Event-driven arxitektura (consumer), RabbitMQ subscribe, idempotentlik, eventual consistency tushunchasi.
+=======
+# foodexpress-notification
+>>>>>>> de1e344f3859946ddfc62a91cce92af0f2ba9ca2
