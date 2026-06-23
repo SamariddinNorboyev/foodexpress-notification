@@ -23,7 +23,7 @@ Order servis chiqargan **RabbitMQ eventlarini tinglaydi** va foydalanuvchiga xab
 - [ ] Swagger: `http://localhost:8002/docs`. `GET /health` sog'liq endpointi.
 
 ## 3. Ma'lumotlar modeli (`notification_db`)
-
+ 
 **notifications** — `id` (UUID), `user_id`, `order_id`, `type` (ORDER_CREATED / STATUS_CHANGED), `title`, `body`, `is_read`, `created_at`
 **processed_events** — `event_id` (PK, UUID), `processed_at` — idempotentlik uchun
 
