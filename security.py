@@ -51,7 +51,7 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Security(securi
         # 1. Imzo (Signature), muddat (exp) va issuer (iss) tekshiriladi
         payload = jwt.decode(
             token, 
-            settings.JWT_SECRET, 
+            settings.jwt_secret, 
             algorithms=["HS256"],
             issuer="foodexpress-auth" # Token 'foodexpress-auth' tomonidan berilganini tekshiradi
         )
