@@ -8,7 +8,7 @@ import jwt
 from typing import List, Optional
 from fastapi import HTTPException, Security, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field, ValidationError, field_validator
 from core.config import settings
 
 load_dotenv()
@@ -41,9 +41,14 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Security(security))
 security_bearer = HTTPBearer()
 
 class CurrentUser(BaseModel):
-    id: str = Field(..., alias="user_id")        # JWT'dagi 'user_id' -> FastAPI'da 'id'
-    role: str = Field(..., alias="role")     # JWT'dagi 'role'
-    permissions: List[str]                   # JWT'dagi 'permissions[]'
+    id: int = Field(..., alias="user_id")
+    role: str = Field(..., alias="role")
+    permissions: List[str]
+
+    @field_validator("permissions", mode="before")
+    @classmethod
+    def extract_permission_codes(cls, v):
+        return [item["code"] if isinstance(item, dict) else item for item in v]               # JWT'dagi 'permissions[]'
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Security(security_bearer)) -> CurrentUser:
     token = credentials.credentials
