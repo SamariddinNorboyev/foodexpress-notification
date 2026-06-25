@@ -41,7 +41,7 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Security(security))
 security_bearer = HTTPBearer()
 
 class CurrentUser(BaseModel):
-    id: str = Field(..., alias="sub")        # JWT'dagi 'sub' -> FastAPI'da 'id'
+    id: str = Field(..., alias="user_id")        # JWT'dagi 'user_id' -> FastAPI'da 'id'
     role: str = Field(..., alias="role")     # JWT'dagi 'role'
     permissions: List[str]                   # JWT'dagi 'permissions[]'
 
