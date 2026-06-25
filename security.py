@@ -8,7 +8,7 @@ import jwt
 from typing import List, Optional
 from fastapi import HTTPException, Security, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 from core.config import settings
 
 load_dotenv()
@@ -48,18 +48,21 @@ class CurrentUser(BaseModel):
 def get_current_user(credentials: HTTPAuthorizationCredentials = Security(security_bearer)) -> CurrentUser:
     token = credentials.credentials
     try:
-        # 1. Imzo (Signature), muddat (exp) va issuer (iss) tekshiriladi
         payload = jwt.decode(
             token, 
             settings.jwt_secret, 
             algorithms=["HS256"],
-            issuer="foodexpress-auth" # Token 'foodexpress-auth' tomonidan berilganini tekshiradi
+            issuer="foodexpress-auth"
         )
         return CurrentUser(**payload)
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token muddati tugagan")
     except jwt.PyJWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Yaroqsiz token")
+    except ValidationError as e:
+        missing = [err["loc"][0] for err in e.errors() if err["type"] == "missing"]
+        detail = f"Token tarkibida yetishmayotgan maydonlar: {missing}" if missing else "Token tarkibi noto'g'ri"
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=detail)
 
 class PermissionChecker:
     def __init__(self, required_permission: str):
